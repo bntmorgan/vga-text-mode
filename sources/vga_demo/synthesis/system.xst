@@ -1,0 +1,10 @@
+run
+-ifn /home/bmorgan/documents/laas/enseignements/insa/projet-systeme-info/vga/sources/vga_demo/synthesis/system.prj
+-top system
+-ifmt MIXED
+-opt_mode AREA
+-opt_level 2
+-resource_sharing YES
+-reduce_control_sets AUTO
+-p xc6lx16-3-cs324
+-ofn /home/bmorgan/documents/laas/enseignements/insa/projet-systeme-info/vga/sources/vga_demo/synthesis/system.ngc
