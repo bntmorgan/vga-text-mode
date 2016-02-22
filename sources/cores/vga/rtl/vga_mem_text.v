@@ -46,7 +46,7 @@ assign sys_we0[1] = sys_we & sys_a[11]; // From 0x800 0xfff
 reg vga_a_msb;
 wire [31:0] vga_dr0 [1:0];
 wire vga_we0 [1:0];
-assign vga_dr = vga_dr0[vga_a_msb][7:0];
+assign vga_dr = vga_dr0[vga_a_msb][15:0];
 assign vga_we0[0] = vga_we & ~vga_a[10]; // From 0x0 to 0x7ff
 assign vga_we0[1] = vga_we & vga_a[10]; // From 0x800 0xfff
 

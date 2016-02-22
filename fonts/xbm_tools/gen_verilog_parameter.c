@@ -60,7 +60,7 @@ void print_text(void) {
   printf("parameter [32767:0] INIT = {");
   for (i = 4095; i >= 0; i--) {
     if (i % 2) {
-      printf("8'h00");
+      printf("8'hbe");
     } else {
       printf("8'h%02x", gilles[j]);
       if (j >= 0) {

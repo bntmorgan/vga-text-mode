@@ -42,6 +42,62 @@ module vga_text_mode (
   input [7:0] font_dr
 );
 
+reg [25:0] bc;
+reg beo;
+
+reg [7:0] colors [15:0];
+
+wire pixel;
+wire [7:0] color_fg;
+wire [7:0] color_bg;
+wire blink;
+
+task init_sys;
+begin
+  bc <= 26'b0;
+  beo <= 1'b0;
+  /** Init color palette
+   * 32-bit RGB to 8-bit color
+   * print(hex(int((r*6/256)*36 + (g*6/256)*6 + (b*6/256))))
+   * http://wiki.osdev.org/Text_UI
+   */
+  colors[0] <= 8'h00; // Black
+  colors[1] <= 8'h03; // Blue
+  colors[2] <= 8'h17; // Green
+  colors[3] <= 8'h1b; // Cyan
+  colors[4] <= 8'h8f; // Red
+  colors[5] <= 8'h93; // Magenta
+  colors[6] <= 8'h9b; // Brown
+  colors[7] <= 8'haa; // Light gray
+  colors[8] <= 8'h55; // Dark gray
+  colors[9] <= 8'h59; // Light blue
+  colors[10] <= 8'h6d; // Light green
+  colors[11] <= 8'h71; // Light cyan
+  colors[12] <= 8'he5; // Light red
+  colors[13] <= 8'he9; // Light magenta
+  colors[14] <= 8'hfc; // Yellow
+  colors[15] <= 8'hff; // White
+end
+endtask
+
+initial begin
+  init_sys;
+end
+
+// Blink counter
+always @(posedge sys_clk) begin
+  if (sys_rst) begin
+    init_sys;
+  end else begin
+    if (bc < 49999999) begin
+      bc <= bc + 1'b1;
+    end else begin
+      bc <= 26'b0;
+      beo <= (beo) ? 1'b0 : 1'b1;
+    end
+  end
+end
+
 // default write wires
 assign text_we = 1'b0;
 assign text_dw = 8'b0;
@@ -52,7 +108,16 @@ assign text_a = ca;
 
 assign font_a = (text_dr[7:0] * 13'd14) + (pa >> 3);
 
-// Assign pixel color
-assign p = ((font_dr >> (pa & 7)) & 1) ? 8'hff : 8'h00;
+// Colors
+assign color_fg = colors[text_dr[11:8]];
+assign color_bg = colors[text_dr[14:12]];
+assign blink = text_dr[15];
 
-endmodule 
+// Pixel present : display foreground color or background color
+assign pixel = ((font_dr >> (pa & 7)) & 1);
+
+// Assign the computed color
+// assign p = (pixel & ~(blink & beo)) ? color_fg : color_bg;
+assign p = (pixel & ~(blink & beo)) ? color_fg : color_bg;
+
+endmodule
