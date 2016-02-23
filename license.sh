@@ -11,8 +11,8 @@ for f in `find . -type f | grep -i "\.\(c\|h\|v\)$"`; do
 		cat $f >> $f.new
     mv $f.new $f
     echo "License Header copied to $f"
-  fi 
-done 
+  fi
+done
 
 for f in `find . -type f | grep -i "\(Makefile\|\.mk\)$"`; do
   if (grep Copyright $f);then 
@@ -24,5 +24,5 @@ for f in `find . -type f | grep -i "\(Makefile\|\.mk\)$"`; do
 		cat $f >> $f.new
     mv $f.new $f
     echo "License Header copied to $f"
-  fi 
-done 
+  fi
+done
