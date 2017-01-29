@@ -41,10 +41,10 @@ module vga_top (
   output vga_hsync,
   output vga_vsync,
   // Memory interface
-  input [7:0] mem_dw,
-  input [11:0] mem_a,
+  input [15:0] mem_dw,
+  input [10:0] mem_a,
   input mem_we,
-  output [7:0] mem_dr
+  output [15:0] mem_dr
 );
 
 wire [6:0] pa;

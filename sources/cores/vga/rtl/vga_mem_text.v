@@ -22,10 +22,10 @@ module vga_mem_text (
   input sys_clk,
   input sys_rst,
   // Memory interface
-  input [7:0] sys_dw,
-  input [11:0] sys_a,
+  input [15:0] sys_dw,
+  input [10:0] sys_a,
   input sys_we,
-  output [7:0] sys_dr,
+  output [15:0] sys_dr,
   // Memory interface
   input [15:0] vga_dw,
   input [10:0] vga_a,
@@ -39,9 +39,9 @@ module vga_mem_text (
 reg sys_a_msb;
 wire [31:0] sys_dr0 [1:0];
 wire sys_we0 [1:0];
-assign sys_dr = sys_dr0[sys_a_msb][7:0];
-assign sys_we0[0] = sys_we & ~sys_a[11]; // From 0x0 to 0x7ff
-assign sys_we0[1] = sys_we & sys_a[11]; // From 0x800 0xfff
+assign sys_dr = sys_dr0[sys_a_msb][15:0];
+assign sys_we0[0] = sys_we & ~sys_a[10]; // From 0x0 to 0x7ff
+assign sys_we0[1] = sys_we & sys_a[10]; // From 0x800 0xfff
 
 reg vga_a_msb;
 wire [31:0] vga_dr0 [1:0];
@@ -62,7 +62,7 @@ initial begin
 end
 
 always @(posedge sys_clk) begin
-  sys_a_msb <= sys_a[11];
+  sys_a_msb <= sys_a[10];
   vga_a_msb <= vga_a[10];
 end
 
@@ -80,7 +80,7 @@ generate for (ram_index=0; ram_index < 2; ram_index=ram_index+1)
 begin: gen_ram
 
 RAMB16BWER #(
-  .DATA_WIDTH_A(9),
+  .DATA_WIDTH_A(18),
   .DATA_WIDTH_B(18),
   .DOA_REG(0),
   .DOB_REG(0),
@@ -156,11 +156,11 @@ RAMB16BWER #(
   // Processor interface
   .CLKA(sys_clk),
   .ENA(1'b1),
-  .WEA({3'b0, sys_we0[ram_index]}),
+  .WEA({2'b0, sys_we0[ram_index], sys_we0[ram_index]}),
   .RSTA(sys_rst),
-  .ADDRA({sys_a[10:0],3'b0}), // 8 bits addressed
+  .ADDRA({sys_a[9:0],4'b0}), // 8 bits addressed
   .DIPA(4'b0),
-  .DIA({24'b0, sys_dw}),
+  .DIA({16'b0, sys_dw}),
   .DOA(sys_dr0[ram_index]),
   .DOPA(),
 

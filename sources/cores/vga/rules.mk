@@ -40,7 +40,7 @@ SIM 			      := $(call SRC_2_BIN, $(d)/vga_top.sim)
 SRC_SIM_$(d)		:= $(SRC_$(d)) $(d)/rtl/sim_vga_top.v $(XILINX_SRC_$(d))
 $(SIM)					: $(SRC_SIM_$(d))
 $(SIM)					: SIM_CFLAGS := -I$(d)/rtl -I$(CORES_DIR)/sim/rtl/
-SIMS						+= $(SIM)
+# SIMS						+= $(SIM)
 
 # Fixed
 # TARGETS 				+= $(TARGET)
